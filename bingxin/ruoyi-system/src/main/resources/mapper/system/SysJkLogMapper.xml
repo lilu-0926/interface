@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysJkLogMapper">
+    
+    <resultMap type="SysJkLog" id="SysJkLogResult">
+        <result property="operId"    column="oper_id"    />
+        <result property="tjh000"    column="tjh000"    />
+        <result property="method"    column="method"    />
+        <result property="directions"    column="directions"    />
+        <result property="parameter"    column="parameter"    />
+        <result property="status"    column="status"    />
+        <result property="operTime"    column="oper_time"    />
+    </resultMap>
+
+    <sql id="selectSysJkLogVo">
+        select oper_id, tjh000, method, directions, parameter, status, oper_time from sys_jk_log
+    </sql>
+
+    <select id="selectSysJkLogList" parameterType="SysJkLog" resultMap="SysJkLogResult">
+        <include refid="selectSysJkLogVo"/>
+        <where>  
+            <if test="tjh000 != null  and tjh000 != ''"> and tjh000 = #{tjh000}</if>
+            <if test="method != null  and method != ''"> and method = #{method}</if>
+            <if test="directions != null  and directions != ''"> and directions = #{directions}</if>
+            <if test="parameter != null  and parameter != ''"> and parameter = #{parameter}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="operTime != null  and operTime != ''"> and to_char(to_date(oper_time,'yyyy-MM-dd HH24:mi:ss'),'yyyyMMdd') = #{operTime}</if>
+        </where>
+        order by oper_time desc,method desc
+    </select>
+    
+    <select id="selectSysJkLogById" parameterType="Long" resultMap="SysJkLogResult">
+        <include refid="selectSysJkLogVo"/>
+        where oper_id = #{operId}
+    </select>
+        
+    <insert id="insertSysJkLog" parameterType="SysJkLog">
+        <selectKey keyProperty="operId" resultType="long" order="BEFORE">
+            SELECT seq_sys_jk_log.NEXTVAL as operId FROM DUAL
+        </selectKey>
+        insert into sys_jk_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="operId != null">oper_id,</if>
+            <if test="tjh000 != null">tjh000,</if>
+            <if test="method != null">method,</if>
+            <if test="directions != null">directions,</if>
+            <if test="parameter != null">parameter,</if>
+            <if test="status != null">status,</if>
+            <if test="operTime != null">oper_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="operId != null">#{operId},</if>
+            <if test="tjh000 != null">#{tjh000},</if>
+            <if test="method != null">#{method},</if>
+            <if test="directions != null">#{directions},</if>
+            <if test="parameter != null">#{parameter},</if>
+            <if test="status != null">#{status},</if>
+            <if test="operTime != null">#{operTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysJkLog" parameterType="SysJkLog">
+        update sys_jk_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tjh000 != null">tjh000 = #{tjh000},</if>
+            <if test="method != null">method = #{method},</if>
+            <if test="directions != null">directions = #{directions},</if>
+            <if test="parameter != null">parameter = #{parameter},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="operTime != null">oper_time = #{operTime},</if>
+        </trim>
+        where oper_id = #{operId}
+    </update>
+
+    <delete id="deleteSysJkLogById" parameterType="Long">
+        delete from sys_jk_log where oper_id = #{operId}
+    </delete>
+
+    <delete id="deleteSysJkLogByIds" parameterType="String">
+        delete from sys_jk_log where oper_id in 
+        <foreach item="operId" collection="array" open="(" separator="," close=")">
+            #{operId}
+        </foreach>
+    </delete>
+</mapper>

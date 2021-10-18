@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增操作日志记录')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-log-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">体检号：</label>
+                <div class="col-sm-8">
+                    <input name="tjh000" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">方法名称：</label>
+                <div class="col-sm-8">
+                    <input name="method" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">方法说明：</label>
+                <div class="col-sm-8">
+                    <input name="directions" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">参数：</label>
+                <div class="col-sm-8">
+                    <input name="parameter" class="form-control" type="text">
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-sm-3 control-label">操作状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box">
+                        <input type="radio" name="status" value="">
+                        <label th:for="status" th:text="未知"></label>
+                    </div>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="form-control-static" th:class="${status == 0 ? 'label label-primary' : 'label label-danger'}" th:text="${status == 0 ? '正常' : '异常'}">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">操作时间：</label>
+                <div class="col-sm-8">
+                    <input name="operTime" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/log"
+        $("#form-log-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-log-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

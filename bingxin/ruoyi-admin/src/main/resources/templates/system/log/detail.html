@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('系统日志详细')" />
+	<th:block th:include="include :: jsonview-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<form class="form-horizontal m-t" id="signupForm">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">方法名称：</label>
+			<div class="form-control-static" th:text="${apiLog.method}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求方式：</label>
+			<div class="form-control-static" th:text="${apiLog.requestMethod}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求URL：</label>
+			<div class="form-control-static" th:text="${apiLog.operUrl}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求参数：</label>
+			<div class="form-control-static"><pre id="operParam"></pre></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">返回参数：</label>
+			<div class="form-control-static"><pre id="jsonResult"></pre></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">状态：</label>
+			<div class="form-control-static" th:class="${apiLog.status == 0 ? 'label label-primary' : 'label label-danger'}" th:text="${apiLog.status == 0 ? '正常' : '异常'}">
+			</div>
+		</div>
+		<div class="form-group" th:style="'display:' + ${apiLog.status == 0 ? 'none' : 'block'}">
+			<label class="col-sm-2 control-label">异常信息：</label>
+			<div class="form-control-static" th:text="${apiLog.errorMsg}">
+			</div>
+		</div>
+	</form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: jsonview-js" />
+    <script th:inline="javascript">
+	    $(function() {
+	    	var operParam = [[${apiLog.operParam}]];
+	    	if ($.common.isNotEmpty(operParam) && operParam.length < 2000) {
+	    		$("#operParam").JSONView(operParam);
+	    	} else {
+	    		$("#operParam").text(operParam);
+	    	}
+	    	var jsonResult = [[${apiLog.jsonResult}]];
+	    	if ($.common.isNotEmpty(jsonResult) && jsonResult.length < 2000) {
+	    		$("#jsonResult").JSONView(jsonResult);
+	    	} else {
+	    		$("#jsonResult").text(jsonResult);
+	    	}
+	    });
+    </script>
+</body>
+</html>
